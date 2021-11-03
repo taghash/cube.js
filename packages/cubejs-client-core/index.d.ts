@@ -8,6 +8,11 @@
  */
 
 declare module '@cubejs-client/core' {
+  type GeneratedMeasure = import('./generated').Measure;
+  type GeneratedDimension = import('./generated').Dimension;
+  type GeneratedTimeDimension = import('./generated').TimeDimension;
+  type GeneratedSegment = import('./generated').Segment;
+
   export type TransportOptions = {
     /**
      * [jwt auth token](security)
@@ -108,8 +113,8 @@ declare module '@cubejs-client/core' {
 
   export type QueryOrder = 'asc' | 'desc';
 
-  export type TQueryOrderObject = { [key: string]: QueryOrder };
-  export type TQueryOrderArray = Array<[string, QueryOrder]>;
+  export type TQueryOrderObject = Record<GeneratedMeasure | GeneratedDimension, QueryOrder>;
+  export type TQueryOrderArray = Array<[GeneratedMeasure | GeneratedDimension, QueryOrder]>;
 
   export type Annotation = {
     title: string;
@@ -724,13 +729,13 @@ declare module '@cubejs-client/core' {
 
   type BinaryFilter = {
     dimension?: string;
-    member?: string;
+    member?: GeneratedMeasure | GeneratedDimension;
     operator: BinaryOperator;
     values: string[];
   };
   type UnaryFilter = {
     dimension?: string;
-    member?: string;
+    member?: GeneratedMeasure | GeneratedDimension;
     operator: UnaryOperator;
     values?: never;
   };
@@ -754,7 +759,7 @@ declare module '@cubejs-client/core' {
   export type DateRange = string | [string, string];
 
   export type TimeDimensionBase = {
-    dimension: string;
+    dimension: GeneratedTimeDimension;
     granularity?: TimeDimensionGranularity;
   };
 
@@ -772,11 +777,11 @@ declare module '@cubejs-client/core' {
   export type TimeDimension = TimeDimensionComparison | TimeDimensionRanged;
 
   export type Query = {
-    measures?: string[];
-    dimensions?: string[];
+    measures?: GeneratedMeasure[];
+    dimensions?: GeneratedDimension[];
     filters?: Filter[];
     timeDimensions?: TimeDimension[];
-    segments?: string[];
+    segments?: GeneratedSegment[];
     limit?: number;
     offset?: number;
     order?: TQueryOrderObject | TQueryOrderArray;
@@ -1107,7 +1112,7 @@ declare module '@cubejs-client/core' {
 
   type TFlatFilter = {
     dimension?: string;
-    member?: string;
+    member?: GeneratedMeasure | GeneratedDimension;
     operator: BinaryOperator;
     values: string[];
   };

@@ -30,7 +30,8 @@
   "files": [
     "src",
     "dist",
-    "index.d.ts"
+    "index.d.ts",
+    "generated.d.ts"
   ],
   "license": "MIT",
   "devDependencies": {
