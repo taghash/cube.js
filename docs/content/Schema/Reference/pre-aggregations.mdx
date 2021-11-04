@@ -375,7 +375,7 @@ cube][ref-schema-segments] that can target the pre-aggregation:
 <WarningBox>
 
 The relevant measures/dimensions that make up the segment **must** be included
-in the pre-aggregation definition.
+in the pre-aggregation definition; only adding the segment will not work.
 
 </WarningBox>
 
@@ -383,16 +383,29 @@ in the pre-aggregation definition.
 cube(`Orders`, {
   sql: `SELECT * FROM orders`,
 
-  ...,
+  measures: {
+    count: {
+      type: `count`,
+    },
+  },
+
+  dimensions: {
+    status: {
+      type: `string`,
+      sql: `status`,
+    },
+  },
 
   segments: {
     onlyComplete: {
-      sql: `${CUBE}.status = 'complete'`,
+      sql: `${CUBE}.status = 'completed'`,
     },
   },
 
   preAggregations: {
     main: {
+      measures: [CUBE.count],
+      // The dimension that `onlyComplete` uses MUST be added too
       dimensions: [CUBE.status],
       segments: [CUBE.onlyComplete],
     },
